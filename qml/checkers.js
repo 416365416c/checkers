@@ -25,7 +25,7 @@ function init(canvasItem) {
     for(var i = 0; i<maxR; i++)
         for(var j = 0; j<maxC; j++)
             gameSquares[idx2D(i,j)] = squareComponent.createObject(canvasItem,
-                    {"row":i, "col":j, "tileSize":canvasItem.tileSize});
+                    {"row":i, "col":j, "canvas": canvasItem});
     console.log("Initialization performed.");
 }
 
@@ -102,9 +102,16 @@ function calcMoves(player) {
         if(gamePieces[i] != null) {
             if(gamePieces[i].player == player) {
                 var piece = gamePieces[i];
-                var targetRow = player ? piece.row + 1 : piece.row - 1;
-                evaluateMoves(piece, targetRow, piece.col + 1);
-                evaluateMoves(piece, targetRow, piece.col - 1);
+                if (piece.king) {
+                    evaluateMoves(piece, piece.row + 1, piece.col + 1);
+                    evaluateMoves(piece, piece.row + 1, piece.col - 1);
+                    evaluateMoves(piece, piece.row - 1, piece.col + 1);
+                    evaluateMoves(piece, piece.row - 1, piece.col - 1);
+                } else {
+                    var targetRow = player ? piece.row + 1 : piece.row - 1;
+                    evaluateMoves(piece, targetRow, piece.col + 1);
+                    evaluateMoves(piece, targetRow, piece.col - 1);
+                }
             }
         }
     }
@@ -139,6 +146,9 @@ function executeMove(move, isJump)
     move.piece.row = move.row;
     move.piece.col = move.col;
     move.piece.aiMoving = false;
+    if ( (move.piece.row == 0 && move.piece.player == 0)
+            || (move.piece.row == 7 && move.piece.player == 1))
+        move.piece.king = true;
     if (isJump) {
         for(var i=0; i<gamePieces.length; i++)
             if(gamePieces[i] == move.target)
@@ -166,7 +176,7 @@ function executeMove(move, isJump)
 function startMove(item)
 {
     //Prune Highlights, optimized for loc not speed
-    loadHighlights(item);//Clears others
+    loadHighlights(item);//Clears others too
 }
 
 var slipFactor = 16;

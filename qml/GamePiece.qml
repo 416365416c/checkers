@@ -8,6 +8,7 @@ Item {
     property int tileSize: canvas.tileSize
     property int col: 0
     property int row: 0
+    property bool king: false
     width: tileSize
     height: tileSize
     property bool aiMoving: false
@@ -17,8 +18,22 @@ Item {
     y: tileSize * row
     Rectangle {
         anchors.fill: parent
-        color: player == 0 ? "red" : "black"
+        color: player == 0 ? "#F00000" : "#101010"
+        border.color: player == 0 ? "#A00000" : "#505050"
         radius: width/2
+    }
+    Image {
+        id:img
+        anchors.centerIn: parent
+        source: player == 0 ? "images/white_king.png" : "images/black_king.png"
+        visible: container.king
+    }
+    onKingChanged: kingAnim.running = true
+    ParallelAnimation {
+        id: kingAnim
+        running: false
+        NumberAnimation { target: img; property: "opacity"; from: 0.0; to: 1.0; }
+        NumberAnimation { target: img; property: "scale"; from: 0.0; to: 0.8; easing.type: Easing.OutBack; easing.overshoot: 4.8 }
     }
     MouseArea {
         anchors.fill: parent

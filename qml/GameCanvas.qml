@@ -29,9 +29,13 @@ Item {
     Component.onCompleted: Logic.init(canvas)
 
     MyText {
-        anchors.centerIn: parent
+        anchors.fill: parent
+        anchors.margins: -64
         text: "GAME OVER!"
-        font.pixelSize: 72
+        wrapMode: Text.WordWrap
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font.pixelSize: 128
         font.bold: true
         visible: canvas.gameOver == true
         z: 1

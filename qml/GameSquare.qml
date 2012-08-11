@@ -1,7 +1,8 @@
 import QtQuick 1.1
 
 Rectangle {
-    property int tileSize: 80
+    property QtObject canvas: null
+    property int tileSize: canvas.tileSize
     property int col: 0
     property int row: 0
     width: tileSize
@@ -28,6 +29,11 @@ Rectangle {
         }
     }
     property string highlightColor: "black"
+    Connections {
+        target: canvas
+        ignoreUnknownSignals: true
+        onGameOverChanged: highlightColor = "black"
+    }
     onHighlightColorChanged: {
         if (highlightColor == "black") {
             pulseAnim.running = false;
