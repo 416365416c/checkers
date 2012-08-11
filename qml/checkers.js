@@ -96,6 +96,7 @@ function evaluateMoves(piece, row, col) {
 }
 
 function calcMoves(player) {
+    gameCanvas.curPlayer = player;
     captureMoves.splice(0,captureMoves.length);
     otherMoves.splice(0,otherMoves.length);
     for(var i=0; i<gamePieces.length; i++) {
@@ -115,7 +116,7 @@ function calcMoves(player) {
             }
         }
     }
-    if (player == 0) //Help Humans with Highlights
+    if (player == 0 || !gameCanvas.p2ai) //Help Humans with Highlights
         loadHighlights();
     victoryCheck();
 }
@@ -139,7 +140,7 @@ function victoryCheck()
 
 function executeMove(move, isJump)
 {
-    if (move.piece.player == 1)
+    if (move.piece.player == 1 && gameCanvas.p2ai)
         move.piece.aiMoving = true;
     move.piece.x = move.col * gameCanvas.tileSize;
     move.piece.y = move.row * gameCanvas.tileSize;
@@ -159,7 +160,7 @@ function executeMove(move, isJump)
             for(var i=0; i < captureMoves.length; i++) {
                 if(captureMoves[i].piece == move.piece) {
                     gameCanvas.multijumper = move.piece;
-                    if(move.piece.player == 1)
+                    if(move.piece.player == 1 && gameCanvas.p2ai)
                         gameCanvas.delayedAiMove();//Delay so you see all jumps
                     return;
                 }
@@ -169,7 +170,7 @@ function executeMove(move, isJump)
     gameCanvas.multijumper = null;
     var nextPlayer = move.piece.player ? 0 : 1;
     calcMoves(nextPlayer)
-    if(nextPlayer == 1 && !gameCanvas.gameOver)
+    if(nextPlayer == 1 && gameCanvas.p2ai && !gameCanvas.gameOver)
         AiMove();
 }
 

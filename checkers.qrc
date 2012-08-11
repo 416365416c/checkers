@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/" lang="qml">
+        <file>qml/Button.qml</file>
+        <file>qml/GamePiece.qml</file>
+        <file>qml/MyText.qml</file>
+        <file>qml/GameSquare.qml</file>
+        <file>qml/checkers.qml</file>
+        <file>qml/checkers.js</file>
+        <file>qml/GameCanvas.qml</file>
+        <file>qml/images/white_king.png</file>
+        <file>qml/images/black_king.png</file>
+    </qresource>
+</RCC>

@@ -8,6 +8,11 @@ Item {
     property bool gameOver: true
     property bool acceptingInput: !gameOver && !aiDelay
     property bool aiDelay: false
+    property bool p2ai: true
+    property int curPlayer: 0
+    property string playerStr: curPlayer == 0 ? "Red" : "Black"
+    property string turnStr: playerStr + "'s move"
+    property string multiStr: playerStr + " is still jumping"
     function newGame() {
         aiTimer.running = false;
         Logic.newGame();
@@ -44,8 +49,13 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         y: -64
         font.pixelSize: 32
-        text: "Keep jumping!"
-        visible: canvas.multijumper != null
+        text: if (canvas.multijumper != null) {
+            multiStr;
+        } else if (canvas.gameOver) {
+            'Press "New Game" to play again';
+        } else {
+            turnStr;
+        }
         z: 1
     }
     Rectangle { //Should just be border, as tiles cover the inner square

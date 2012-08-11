@@ -14,6 +14,15 @@ Item {
             tileSize: 320/8
             anchors.centerIn: parent
         }
+        Button {
+            height: 32
+            width: 206
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.margins: 8
+            caption: canvas.p2ai ? "Give P2 control to Humans" : "Give P2 control to AI"
+            onClicked: canvas.p2ai = !canvas.p2ai
+        }
         Row {
             height: 32
             anchors.right: parent.right
