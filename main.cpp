@@ -1,5 +1,7 @@
+#include <QObject>
 #include <QApplication>
 #include <QDeclarativeView>
+#include <QDeclarativeEngine>
 
 int main (int argc, char* argv[])
 {
@@ -7,5 +9,7 @@ int main (int argc, char* argv[])
     QDeclarativeView view;
     view.setSource(QUrl::fromLocalFile("qml/checkers.qml"));
     view.show();
+    QObject::connect(view.engine(), SIGNAL(quit()),
+            &app, SLOT(quit()));
     return app.exec();
 }

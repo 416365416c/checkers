@@ -9,6 +9,7 @@ var squareComponent = Qt.createComponent("GameSquare.qml");
 var pieceComponent = Qt.createComponent("GamePiece.qml");
 var captureMoves = new Array;
 var otherMoves = new Array;
+var animDur = 500;
 function idx2D(r, c) {
     return r*maxC + c;
 }
@@ -23,11 +24,11 @@ function init(canvasItem) {
         for(var j = 0; j<maxC; j++)
             gameSquares[idx2D(i,j)] = squareComponent.createObject(canvasItem,
                     {"row":i, "col":j, "tileSize":canvasItem.tileSize});
-    newGame();
     console.log("Initialization performed.");
 }
 
 function newGame() {
+    gameCanvas.gameOver = false
     for (var i = 0; i<gamePieces.length; i++)
         if(gamePieces[i] != null)
             gamePieces[i].destroy();
@@ -36,7 +37,7 @@ function newGame() {
     var col = 1;
     for (var i = 0; i<12; i++) {
         gamePieces[i] = pieceComponent.createObject(gameCanvas,
-                {"row": row, "col": col, "player":1, "tileSize":gameCanvas.tileSize});
+                {"row": row, "col": col, "player":1, "canvas":gameCanvas});
         col += 2;
         if (col >= maxC) {
             col -= maxC;
@@ -52,7 +53,7 @@ function newGame() {
     col = 0;
     for (var i = 0; i<12; i++) {
         gamePieces[i+12] = pieceComponent.createObject(gameCanvas,
-                {"row": row, "col": col, "player":0, "tileSize":gameCanvas.tileSize});
+                {"row": row, "col": col, "player":0, "canvas":gameCanvas});
         col += 2;
         if (col >= maxC) {
             col -= maxC;
@@ -127,10 +128,13 @@ function victoryCheck()
 
 function executeMove(move, isJump)
 {
+    if (move.piece.player == 1)
+        move.piece.aiMoving = true;
+    move.piece.x = move.col * gameCanvas.tileSize;
+    move.piece.y = move.row * gameCanvas.tileSize;
     move.piece.row = move.row;
     move.piece.col = move.col;
-    move.piece.x = move.col * gameCanvas.tileSize; //Drag overrode binding
-    move.piece.y = move.row * gameCanvas.tileSize; //Drag overrode binding
+    move.piece.aiMoving = false;
     if (isJump) {
         for(var i=0; i<gamePieces.length; i++)
             if(gamePieces[i] == move.target)
@@ -142,7 +146,7 @@ function executeMove(move, isJump)
                 if(captureMoves[i].piece == move.piece) {
                     gameCanvas.multijumper = move.piece;
                     if(move.piece.player == 1)
-                        AiMove();
+                        gameCanvas.delayedAiMove();//Delay so you see all jumps
                     return;
                 }
             }
