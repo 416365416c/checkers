@@ -28,4 +28,19 @@ Item {
         onPressed: Logic.startMove(container);
         onReleased: Logic.finishMove(container);
     }
+    function pleaseDestroy() {
+        deathAnim.start();
+    }
+    SequentialAnimation {
+        id: deathAnim
+        running: false
+        NumberAnimation { target: container; property: "opacity"; from: 1.0; to: 0.0; easing.type: Easing.InQuad }
+        ScriptAction { script: container.destroy(); }
+    }
+    ParallelAnimation {
+        id: spawnAnim
+        running: true
+        NumberAnimation { target: container; property: "opacity"; from: 0.0; to: 1.0; easing.type: Easing.InQuart }
+        NumberAnimation { target: container; property: "scale"; from: 10.0; to: 1.0; easing.type: Easing.OutQuad }
+    }
 }

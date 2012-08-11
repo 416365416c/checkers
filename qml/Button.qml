@@ -13,7 +13,7 @@ Rectangle {
         GradientStop { position: 1.0; color: "burlywood" }
     }
 
-    Text {
+    MyText {
         id: txt
         anchors.centerIn: parent
     }

@@ -28,20 +28,18 @@ Item {
     }
     Component.onCompleted: Logic.init(canvas)
 
-    Text {
+    MyText {
         anchors.centerIn: parent
         text: "GAME OVER!"
         font.pixelSize: 72
         font.bold: true
-        color: "firebrick"
         visible: canvas.gameOver == true
         z: 1
     }
-    Text {
+    MyText {
         anchors.horizontalCenter: parent.horizontalCenter
         y: -64
         font.pixelSize: 32
-        color: "firebrick"
         text: "Keep jumping!"
         visible: canvas.multijumper != null
         z: 1
@@ -49,6 +47,6 @@ Item {
     Rectangle { //Should just be border, as tiles cover the inner square
         anchors.fill: parent
         anchors.margins: -20
-        color: "burlywood"
+        color: "#A79176"
     }
 }

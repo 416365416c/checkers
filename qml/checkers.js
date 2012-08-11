@@ -10,6 +10,8 @@ var pieceComponent = Qt.createComponent("GamePiece.qml");
 var captureMoves = new Array;
 var otherMoves = new Array;
 var animDur = 500;
+var moveHighlightColor = "#A7A8CD"
+var capHighlightColor = "#A0CCBB"
 function idx2D(r, c) {
     return r*maxC + c;
 }
@@ -106,6 +108,8 @@ function calcMoves(player) {
             }
         }
     }
+    if (player == 0) //Help Humans with Highlights
+        loadHighlights();
     victoryCheck();
 }
 
@@ -139,7 +143,7 @@ function executeMove(move, isJump)
         for(var i=0; i<gamePieces.length; i++)
             if(gamePieces[i] == move.target)
                 gamePieces.splice(i,1);
-        move.target.destroy();
+        move.target.pleaseDestroy();
         calcMoves(move.piece.player)//Any more jumps?
         if (captureMoves.length) {
             for(var i=0; i < captureMoves.length; i++) {
@@ -161,17 +165,19 @@ function executeMove(move, isJump)
 
 function startMove(item)
 {
-    //for(var i=0; i < otherMoves.length; i++)
-    //    console.log(otherMoves[i].piece.player + " --- " + otherMoves[i].row + "," + otherMoves[i].col);
+    //Prune Highlights, optimized for loc not speed
+    loadHighlights(item);//Clears others
 }
 
 var slipFactor = 16;
 function finishMove(item)
 {
+    clearHighlights();
     if (gameCanvas.multijumper != null && gameCanvas.multijumper != item) {
         //Not valid
         item.x = item.col * gameCanvas.tileSize; //Drag overrode binding
         item.y = item.row * gameCanvas.tileSize; //Drag overrode binding
+        loadHighlights();
         return;
     }
     var newRow = Math.floor((item.y + slipFactor) / gameCanvas.tileSize);
@@ -194,6 +200,26 @@ function finishMove(item)
     //Not valid
     item.x = item.col * gameCanvas.tileSize; //Drag overrode binding
     item.y = item.row * gameCanvas.tileSize; //Drag overrode binding
+    loadHighlights();
+}
+
+function loadHighlights(item)
+{
+    clearHighlights(); //Expedient
+    if (captureMoves.length) {
+        for (var i =0; i<captureMoves.length; i++)
+            if (item == undefined || captureMoves[i].piece == item)
+                gameSquares[idx2D(captureMoves[i].row, captureMoves[i].col)].highlightColor = capHighlightColor;
+    } else {
+        for (var i =0; i<otherMoves.length; i++)
+            if (item == undefined || otherMoves[i].piece == item)
+                gameSquares[idx2D(otherMoves[i].row, otherMoves[i].col)].highlightColor = moveHighlightColor;
+    }
+}
+function clearHighlights()
+{
+    for(var i = 0; i < gameSquares.length; i++)
+        gameSquares[i].highlightColor = "black";
 }
 
 function AiMove()
