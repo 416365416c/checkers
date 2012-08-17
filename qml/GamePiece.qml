@@ -46,6 +46,10 @@ Item {
         onReleased: Logic.finishMove(container);
     }
     function pleaseDestroy() {
+        if(player == 0)
+            canvas.redLeft--;
+        else
+            canvas.blackLeft--;
         deathAnim.start();
     }
     SequentialAnimation {

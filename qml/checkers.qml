@@ -14,6 +14,47 @@ Item {
             tileSize: 320/8
             anchors.centerIn: parent
             Component.onCompleted: canvas.newGame();
+            z: 1
+        }
+        Repeater{
+            model: 12
+            delegate: Rectangle {
+                 id: redCounter
+                 x: -100
+                 y: 120+20*index
+                 width: 80
+                 height: 20
+                 color: "#F00000"
+                 border.color: "#A00000"
+                 states: State {
+                    name: "dead"; when: index >= canvas.redLeft
+                    PropertyChanges {
+                        target: redCounter
+                        x: 30
+                    }
+                 }
+                 transitions: Transition { NumberAnimation { properties: "x" } }
+            }
+        }
+        Repeater{
+            model: 12
+            delegate: Rectangle {
+                 id: blackCounter
+                 x: 700
+                 y: 120+20*index
+                 width: 80
+                 height: 20
+                 color: "#101010"
+                 border.color: "#505050"
+                 states: State {
+                    name: "dead"; when: index >= canvas.blackLeft
+                    PropertyChanges {
+                        target: blackCounter
+                        x: 530
+                    }
+                 }
+                 transitions: Transition { NumberAnimation { properties: "x" } }
+            }
         }
         Button {
             height: 32

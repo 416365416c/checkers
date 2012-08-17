@@ -12,6 +12,8 @@ Item {
     property bool aiDelay: false
     property bool p2ai: true
     property int curPlayer: 0
+    property int redLeft: 12
+    property int blackLeft: 12
     property string playerStr: curPlayer == 0 ? "Red" : "Black"
     property string turnStr: playerStr + "'s move"
     property string multiStr: playerStr + " is still jumping"

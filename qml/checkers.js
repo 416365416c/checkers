@@ -31,6 +31,8 @@ function init(canvasItem) {
 
 function newGame() {
     gameCanvas.gameOver = false
+    gameCanvas.redLeft = 12;
+    gameCanvas.blackLeft = 12;
     for (var i = 0; i<gamePieces.length; i++)
         if(gamePieces[i] != null)
             gamePieces[i].destroy();
