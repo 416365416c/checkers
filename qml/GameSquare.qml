@@ -9,7 +9,7 @@ Rectangle {
     height: tileSize
     x: tileSize * col
     y: tileSize * row
-    property color mainCol: (col + row) % 2 ? "#DEB887" : "#90652C"
+    property color mainCol: (col + row) % 2 ? "#90652C" : "#DEB887"
     property color hiCol: "black"
     color: mainCol
     SequentialAnimation on color{

@@ -13,6 +13,7 @@ Item {
             height: 320
             tileSize: 320/8
             anchors.centerIn: parent
+            Component.onCompleted: canvas.newGame();
         }
         Button {
             height: 32

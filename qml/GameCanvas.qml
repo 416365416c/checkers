@@ -7,6 +7,7 @@ Item {
     property int tileSize: 80
     property Item multijumper: null
     property bool gameOver: true
+    property int winner: -1
     property bool acceptingInput: !gameOver && !aiDelay
     property bool aiDelay: false
     property bool p2ai: true
@@ -14,6 +15,7 @@ Item {
     property string playerStr: curPlayer == 0 ? "Red" : "Black"
     property string turnStr: playerStr + "'s move"
     property string multiStr: playerStr + " is still jumping"
+    property string gameOverStr: winner >= 0 ? (winner == 0 ? "Red wins!" : "Black wins!") : 'Press "New Game" to play again';
     property QtObject brain: App.AIBrain{
         depth: 12
         onMoveChanged: Logic.finishAiMove();
@@ -39,6 +41,7 @@ Item {
     Component.onCompleted: Logic.init(canvas)
 
     MyText {
+        color: winner == 0 ? "red" : "black"
         anchors.fill: parent
         anchors.margins: -64
         text: "GAME OVER!"
@@ -57,11 +60,10 @@ Item {
         text: if (canvas.multijumper != null) {
             multiStr;
         } else if (canvas.gameOver) {
-            'Press "New Game" to play again';
+            gameOverStr;
         } else if (brain.thinking) {
             'AI is thinking, please be patient';
         } else {
-            turnStr;
             turnStr;
         }
         z: 1

@@ -129,17 +129,29 @@ function calcMoves(player) {
 function victoryCheck()
 {
     var gameOver = false;
-    if (otherMoves == 0 && captureMoves == 0)
+    var winner = -1;
+    if (otherMoves == 0 && captureMoves == 0) {
         gameOver = true;
+        if (gameCanvas.curPlayer == 0)
+            winner = 1;
+        else
+            winner = 0;
+    }
     else {
         var left = {"0":0,"1":0};
         for(var i=0; i<gamePieces.length; i++)
             left[gamePieces[i].player]++;
-        if(left[0] + left[1] == 0)
+        if(left[0] == 0 || left[1] == 0) {
             gameOver = true;
+            if (left[0] == 0)
+                winner = 1;
+            else
+                winner = 0;
+        }
     }
     if (gameOver) {
         gameCanvas.gameOver = true;
+        gameCanvas.winner = winner;
     }
 }
 
