@@ -95,27 +95,32 @@ function evaluateMoves(piece, row, col) {
     }
 }
 
+function evaluatePiece(piece) {
+    if (piece.king) {
+        evaluateMoves(piece, piece.row + 1, piece.col + 1);
+        evaluateMoves(piece, piece.row + 1, piece.col - 1);
+        evaluateMoves(piece, piece.row - 1, piece.col + 1);
+        evaluateMoves(piece, piece.row - 1, piece.col - 1);
+    } else {
+        var targetRow = piece.player ? piece.row + 1 : piece.row - 1;
+        evaluateMoves(piece, targetRow, piece.col + 1);
+        evaluateMoves(piece, targetRow, piece.col - 1);
+    }
+}
+
 function calcMoves(player) {
     gameCanvas.curPlayer = player;
     captureMoves.splice(0,captureMoves.length);
     otherMoves.splice(0,otherMoves.length);
-    for(var i=0; i<gamePieces.length; i++) {
-        if(gamePieces[i] != null) {
-            if(gamePieces[i].player == player) {
-                var piece = gamePieces[i];
-                if (piece.king) {
-                    evaluateMoves(piece, piece.row + 1, piece.col + 1);
-                    evaluateMoves(piece, piece.row + 1, piece.col - 1);
-                    evaluateMoves(piece, piece.row - 1, piece.col + 1);
-                    evaluateMoves(piece, piece.row - 1, piece.col - 1);
-                } else {
-                    var targetRow = player ? piece.row + 1 : piece.row - 1;
-                    evaluateMoves(piece, targetRow, piece.col + 1);
-                    evaluateMoves(piece, targetRow, piece.col - 1);
-                }
-            }
-        }
+    if (gameCanvas.multijumper != null) {
+        evaluatePiece(gameCanvas.multijumper);
+        return;
     }
+
+    for(var i=0; i<gamePieces.length; i++)
+        if(gamePieces[i] != null)
+            if(gamePieces[i].player == player)
+                evaluatePiece(gamePieces[i]);
     if (player == 0 || !gameCanvas.p2ai) //Help Humans with Highlights
         loadHighlights();
     victoryCheck();
@@ -150,21 +155,18 @@ function executeMove(move, isJump)
     if ( (move.piece.row == 0 && move.piece.player == 0)
             || (move.piece.row == 7 && move.piece.player == 1))
         move.piece.king = true;
+    clearHighlights();
     if (isJump) {
         for(var i=0; i<gamePieces.length; i++)
             if(gamePieces[i] == move.target)
                 gamePieces.splice(i,1);
         move.target.pleaseDestroy();
+        gameCanvas.multijumper = move.piece;
         calcMoves(move.piece.player)//Any more jumps?
         if (captureMoves.length) {
-            for(var i=0; i < captureMoves.length; i++) {
-                if(captureMoves[i].piece == move.piece) {
-                    gameCanvas.multijumper = move.piece;
-                    if(move.piece.player == 1 && gameCanvas.p2ai)
-                        gameCanvas.delayedAiMove();//Delay so you see all jumps
-                    return;
-                }
-            }
+            if(move.piece.player == 1 && gameCanvas.p2ai)
+                gameCanvas.delayedAiMove();//Delay so you see all jumps
+            return;
         }
     }
     gameCanvas.multijumper = null;
