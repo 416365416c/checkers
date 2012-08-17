@@ -1,6 +1,7 @@
 TEMPLATE = app
-QT += declarative
-SOURCES += main.cpp
+QT += declarative script
+HEADERS += aibrain.h
+SOURCES += main.cpp aibrain.cpp
 
 RESOURCES += \
     checkers.qrc

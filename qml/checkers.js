@@ -233,8 +233,7 @@ function clearHighlights()
         gameSquares[i].highlightColor = "black";
 }
 
-function AiMove()
-{
+function brainlessAI() {
     if (gameCanvas.multijumper != null) {
         for(var i=0; i < captureMoves.length; i++) {
             if(captureMoves[i].piece == gameCanvas.multijumper) {
@@ -252,3 +251,42 @@ function AiMove()
         executeMove(otherMoves[i], false);
     }
 }
+
+function AiMove()
+{
+    if (!gameCanvas.brain) {
+        brainlessAI();
+        return;
+    }
+    gameCanvas.brain.thinkHard(gamePieces);
+}
+
+function finishAiMove()
+{
+    var move = gameCanvas.brain.move;
+    if (captureMoves.length) {
+        for (var i=0; i<captureMoves.length; i++) {
+            if ( captureMoves[i].row == move.targetRow
+                && captureMoves[i].col== move.targetCol
+                && captureMoves[i].piece.row == move.pieceRow
+                && captureMoves[i].piece.col == move.pieceCol ) {
+                executeMove(captureMoves[i], true);
+                return;
+            }
+        }
+    } else {
+        for (var i=0; i<otherMoves.length; i++) {
+            if ( otherMoves[i].row == move.targetRow
+                && otherMoves[i].col== move.targetCol
+                && otherMoves[i].piece.row == move.pieceRow
+                && otherMoves[i].piece.col == move.pieceCol ) {
+                executeMove(otherMoves[i], false);
+                return;
+            }
+        }
+    }
+    console.log("Defective Brain!" + move);
+    brainlessAI();
+    return;
+}
+

@@ -9,6 +9,7 @@ Item {
     property int col: 0
     property int row: 0
     property bool king: false
+    property bool midmultijump: canvas.multijumper == container
     width: tileSize
     height: tileSize
     property bool aiMoving: false
@@ -20,6 +21,7 @@ Item {
         anchors.fill: parent
         color: player == 0 ? "#F00000" : "#101010"
         border.color: player == 0 ? "#A00000" : "#505050"
+        border.width: midmultijump ? 4 : 1
         radius: width/2
     }
     Image {

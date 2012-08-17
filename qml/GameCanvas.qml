@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "checkers.js" as Logic
+import App 1.0 as App
 
 Item {
     id: canvas
@@ -13,6 +14,10 @@ Item {
     property string playerStr: curPlayer == 0 ? "Red" : "Black"
     property string turnStr: playerStr + "'s move"
     property string multiStr: playerStr + " is still jumping"
+    property QtObject brain: App.AIBrain{
+        depth: 12
+        onMoveChanged: Logic.finishAiMove();
+    }
     function newGame() {
         aiTimer.running = false;
         Logic.newGame();
@@ -53,7 +58,10 @@ Item {
             multiStr;
         } else if (canvas.gameOver) {
             'Press "New Game" to play again';
+        } else if (brain.thinking) {
+            'AI is thinking, please be patient';
         } else {
+            turnStr;
             turnStr;
         }
         z: 1
